@@ -35,7 +35,7 @@ def plotAccuracy(Ks,mean_acc):
     plt.show()
 
 if __name__ == '__main__':
-    attribut,result= commun.readCsv('teleCust1000t.csv')
+    attribut,result,features= commun.readCsv('teleCust1000t.csv')
     attribut = preprocessing.StandardScaler().fit(attribut).transform(attribut.astype(float))
     attribut_train,attribut_test,result_train,result_test= commun.splitData(attribut, result, 0.2)
     predictKneighClassifier(4,attribut_train,attribut_test,result_train,result_test)
