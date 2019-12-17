@@ -1,5 +1,6 @@
 from sklearn.metrics import jaccard_similarity_score
 from sklearn.metrics import f1_score
+from sklearn.metrics import log_loss
 import matplotlib.pyplot as plt
 import numpy as np
 import itertools
@@ -9,6 +10,10 @@ def jaccardScore(y_test, yhat):
 
 def f1Score(y_test, yhat):
     f1_score(y_test, yhat, average='weighted')
+
+def logloss(y_test, yhat_prob):
+    log_loss(y_test, yhat_prob)
+
 
 def plot_confusion_matrix(cm, classes,
                           normalize=False,

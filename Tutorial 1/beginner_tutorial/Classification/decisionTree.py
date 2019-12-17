@@ -46,11 +46,10 @@ def plotResults(filename,featureNames,drugTree):
     plt.imshow(img, interpolation='nearest')
 
 if __name__ == '__main__':
-    data,y,columns= commun.readCsv('drug200.csv')
-    data=transformData(data)
+    data, y, columns= commun.readCsv('drug200.csv')
+    data = transformData(data)
     X_trainset, X_testset, y_trainset, y_testset= commun.splitData(data, y, 0.3)
     drugTree=decisionTreeClassifier(X_trainset, X_testset, y_trainset, y_testset)
-    # base_dir = os.getcwd()
-    # path =os.path.join(base_dir, 'drugtree.png')
     plotResults('drugtree.png', columns, drugTree)
+
 
