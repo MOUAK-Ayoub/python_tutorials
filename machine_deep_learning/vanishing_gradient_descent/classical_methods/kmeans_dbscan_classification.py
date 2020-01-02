@@ -23,6 +23,7 @@ def plot_clusters(data, k_labels, k_centers):
 
     plt.show()
 
+
 def dbscan_clustering(data):
     db = DBSCAN(eps=0.001, min_samples=2).fit(data)
 
@@ -38,7 +39,10 @@ def dbscan_clustering(data):
 
 if __name__ == '__main__':
     K  = 3
-    data  = generate_data(100, 3)
+    data, target  = generate_data(100, 3)
     k_labels, k_centers = kmeans_clustering(data, K)
     plot_clusters(data, k_labels, k_centers)
     dbscan_clustering(data)
+    correct_prediction = np.size(target[(k_labels == target)])
+    print(correct_prediction)
+    print(correct_prediction / float(np.size(target)) * 100)
