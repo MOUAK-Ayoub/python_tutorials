@@ -4,7 +4,7 @@ import commun
 import matplotlib.pyplot as plt
 
 N = 300
-K = 2
+K = 3
 hidden_layer_size = 100
 gradient_step = 1e-2
 number_iteration = 10000
@@ -13,10 +13,10 @@ number_iteration = 10000
 def init_parameters():
 
      net_parameters=[]
-     W1 = 0.01 * np.random.randn((2,hidden_layer_size))
-     b1 = 0.01 * np.random.randn((1,hidden_layer_size))
-     W2 = 0.01 * np.random.randn(( hidden_layer_size, K))
-     b2 = 0.01 * np.random.randn((hidden_layer_size, K))
+     W1 = 0.01 * np.random.randn(2,hidden_layer_size)
+     b1 = 0.01 * np.random.randn(1,hidden_layer_size)
+     W2 = 0.01 * np.random.randn(hidden_layer_size,K)
+     b2 = 0.01 * np.random.randn(1, K)
      net_parameters.extend([W1, b1, W2, b2])
 
      return net_parameters
@@ -85,7 +85,7 @@ def optmize_parameters(data, target):
 
     for i in range(number_iteration):
         net_output = neural_net(data, net_parameters)
-        loss, probability = loss_function(data, target)
+        loss, probability = loss_function(net_output[2], target)
         loss_array.append(loss)
         net_parameters = gradient_parameters(data, target, net_parameters, net_output, probability)
 

@@ -46,12 +46,7 @@ def optmize_parameters(W, b, data, target):
     plt.show()
     predicted = np.argmax(probability, axis=1)
 
-
     return predicted, W, b
-
-
-
-
 
 if __name__ == '__main__':
     N = 3000  # number of points per class

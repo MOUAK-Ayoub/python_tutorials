@@ -27,7 +27,7 @@ def split_data(attributs,result,testSize):
 def relu_derivative(output):
 
     output_derivative = np.zeros(output.shape)
-    output_derivative[output >= 0] = 1
+    output_derivative[output > 0] = 1
     return output_derivative
 
 def accuracy(data, result, predicted):
