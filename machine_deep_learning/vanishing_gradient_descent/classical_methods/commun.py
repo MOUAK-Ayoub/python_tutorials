@@ -23,3 +23,27 @@ def generate_data(N, K):
 def split_data(attributs,result,testSize):
     attribut_train,attribut_test,result_train,result_test=train_test_split(attributs, result, test_size=testSize, random_state=4, shuffle= True)
     return attribut_train,attribut_test,result_train,result_test
+
+def relu_derivative(output):
+
+    output_derivative = np.zeros(output.shape)
+    output_derivative[output >= 0] = 1
+    return output_derivative
+
+def accuracy(data, result, predicted):
+    correct_prediction = np.size(result[(predicted == result)])
+    print(correct_prediction)
+    print(correct_prediction / float(np.size(result)) * 100)
+    plot_predicted_classification(data, predicted)
+
+def plot_predicted_classification(data, predicted):
+    K = len(set(predicted))
+    colors = plt.cm.Spectral(np.linspace(0, 1, K))
+
+    for i, color in zip( range(K) , colors):
+
+        member = data[predicted == i]
+        plt.scatter(member[:, 0], member[:, 1], s=40, cmap=color, marker='o')
+
+    plt.show()
+

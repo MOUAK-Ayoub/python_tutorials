@@ -1,5 +1,6 @@
 import numpy as np
 from commun import generate_data, split_data
+import commun
 import matplotlib.pyplot as plt
 
 K= 3 # number of clusters
@@ -49,22 +50,8 @@ def optmize_parameters(W, b, data, target):
     return predicted, W, b
 
 
-def plot_predicted_classification(data, predicted):
-    K = len(set(predicted))
-    colors = plt.cm.Spectral(np.linspace(0, 1, K))
 
-    for i, color in zip( range(K) , colors):
 
-        member = data[predicted == i]
-        plt.scatter(member[:, 0], member[:, 1], s=40, cmap=color, marker='o')
-
-    plt.show()
-
-def accuracy(data, result, predicted):
-    correct_prediction = np.size(result[(predicted == result)])
-    print(correct_prediction)
-    print(correct_prediction / float(np.size(result)) * 100)
-    plot_predicted_classification(data, predicted)
 
 if __name__ == '__main__':
     N = 3000  # number of points per class
@@ -75,9 +62,9 @@ if __name__ == '__main__':
 
     attribut_train,attribut_test,result_train,result_test = split_data(data,target, testSize=0.3)
     predicted_train, W, b = optmize_parameters(W, b, attribut_train, result_train)
-    accuracy(attribut_train,result_train,predicted_train )
+    commun.accuracy(attribut_train,result_train,predicted_train )
 
     loss_test, probability_test = loss_function(W, b, attribut_test, result_test)
     print(loss_test)
     predicted_test = np.argmax(probability_test, axis=1)
-    accuracy(attribut_test, result_test, predicted_test)
+    commun.accuracy(attribut_test, result_test, predicted_test)
