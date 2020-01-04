@@ -34,6 +34,6 @@ if  __name__ == '__main__':
     labels, centers = KmeansRandomData.KmeansClustering(Clus_dataSet, 3)
     data["Clus_km"] = labels
     print centers
-    print data.groupby('Clus_km').mean()
+    print data.groupby('Clus_kmm').mean()
     plot2D(X)
 
