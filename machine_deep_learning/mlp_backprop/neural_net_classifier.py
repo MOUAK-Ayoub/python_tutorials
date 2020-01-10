@@ -1,6 +1,5 @@
-from commun import generate_data, split_data, relu_derivative
 import numpy as np
-import commun
+import machine_deep_learning.mlp_backprop.commun as commun
 import matplotlib.pyplot as plt
 
 N = 300
@@ -52,7 +51,7 @@ def gradient_parameters(data, target,net_parameters, net_outputs, probability):
 
     output_2 = net_outputs[1]
 
-    dRelu = relu_derivative(net_outputs[0])
+    dRelu = commun.relu_derivative(net_outputs[0])
     weight2_sum = np.sum(W2, axis=1).T
     weight2_correct = W2[range(N), target] - 1
     probability_correct = probability[range(N), target] - 1
@@ -97,12 +96,12 @@ def optmize_parameters(data, target):
 
 if __name__ == '__main__':
 
-    data, result = generate_data(N, K)
+    data, result = commun.generate_data(N, K)
 
-    attribut_train, attribut_test, result_train, result_test = split_data(data, result, 0.2)
+    attribut_train, attribut_test, result_train, result_test = commun.split_data(data, result, 0.2)
 
     predicted, net_parameters = optmize_parameters(attribut_train,result_train)
-    commun.accuracy(attribut_train, result_train, predicted )
+    commun.accuracy(attribut_train, result_train, predicted)
 
     net_output = neural_net(attribut_test, net_parameters)
     loss, probability_test = loss_function(net_output[2], result_test)
