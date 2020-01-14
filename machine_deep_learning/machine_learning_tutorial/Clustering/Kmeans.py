@@ -1,7 +1,7 @@
-import commun
+import machine_deep_learning.machine_learning_tutorial.Clustering.commun as commun
 from sklearn.preprocessing import StandardScaler
 import numpy as np
-import KmeansRandomData
+import machine_deep_learning.machine_learning_tutorial.Clustering.KmeansRandomData as KmeansRandomData
 import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
 
@@ -33,7 +33,7 @@ if  __name__ == '__main__':
     Clus_dataSet = StandardScaler().fit_transform(X)
     labels, centers = KmeansRandomData.KmeansClustering(Clus_dataSet, 3)
     data["Clus_km"] = labels
-    print centers
-    print data.groupby('Clus_kmm').mean()
+    print(centers)
+    print(data.groupby('Clus_km').mean())
     plot2D(X)
 

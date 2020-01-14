@@ -1,14 +1,12 @@
 import numpy as np
-import  machine_deep_learning.neural_networks.commun as cm
+import machine_deep_learning.mlp_backprop.commun as commun
 import matplotlib.pyplot as plt
-
 
 N = 300
 K = 3
 hidden_layer_size = 100
 gradient_step = 1e-2
-reg = 0.05
-number_iteration = 1000
+number_iteration = 10000
 
 
 def init_parameters():
@@ -32,18 +30,17 @@ def neural_net(data,net_parameters):
 
     return net_outputs
 
-def loss_function(output_3, target,net_parameters):
+def loss_function(output_3, target):
     N = output_3.shape[0]
 
     data_unnormalized = np.exp(output_3)
     probability = data_unnormalized/ np.sum(data_unnormalized, axis = 1, keepdims= True)
     point_loss = -np.log(probability[range(N), target])
     loss = np.mean(point_loss)
-    reg_loss = 0.5*reg*( np.sum(net_parameters[0]**2) + np.sum(net_parameters[1]**2))
-    loss += reg_loss
+
     return loss, probability
 
-def gradient_parameters(data, target, net_parameters, net_outputs, probability):
+def gradient_parameters(data, target,net_parameters, net_outputs, probability):
     net_parameters_updated = []
 
     N = data.shape[0]
@@ -54,16 +51,24 @@ def gradient_parameters(data, target, net_parameters, net_outputs, probability):
 
     output_2 = net_outputs[1]
 
-    dRelu = cm.relu_derivative(net_outputs[0])
+    dRelu = commun.relu_derivative(net_outputs[0])
+    weight2_sum = np.sum(W2, axis=1).T
+    weight2_correct = W2[range(N), target] - 1
+    probability_correct = probability[range(N), target] - 1
     dProb = probability
     dProb[range(N), target] -= 1
-    dProb /= N
-    dHidden = np.dot(dProb,W2.T)
 
-    dW1 = np.dot(data.T,dRelu*dHidden)
-    db1 = np.sum(dRelu*dHidden, axis=0)
+    dW1 = np.dot(data.T*probability_correct, dRelu) * weight2_sum - np.dot(data.T , dRelu) * weight2_correct.T
+    dW1 /= N
+
+    db1 = np.sum(dRelu*probability_correct, axis=0) * weight2_sum - np.sum(dRelu, axis=0) * weight2_correct.T
+    db1 /= N
+
     dW2 = np.dot(output_2.T, dProb)
+    dW2 /= N
+
     db2 = np.sum(dProb, axis=0)
+    db2 /= N
 
     W1 -= gradient_step * dW1
     b1 -= gradient_step * db1
@@ -79,31 +84,27 @@ def optmize_parameters(data, target):
 
     for i in range(number_iteration):
         net_output = neural_net(data, net_parameters)
-        loss, probability = loss_function(net_output[2], target, net_parameters)
+        loss, probability = loss_function(net_output[2], target)
         loss_array.append(loss)
-        net_parameters = gradient_parameters(data, target, net_parameters, net_output, probability.copy())
+        net_parameters = gradient_parameters(data, target, net_parameters, net_output, probability)
 
     plt.plot(range(number_iteration), loss_array)
     plt.show()
+    predicted = np.argmax(probability, axis=1)
 
-    print('Min train loss {0}'.format(np.min(loss)))
-    return probability, net_parameters
-
+    return predicted, net_parameters
 
 if __name__ == '__main__':
 
-    data, result = cm.generate_data(N, K)
-    attribut_train, attribut_test, result_train, result_test = cm.split_data(data, result, 0.2)
+    data, result = commun.generate_data(N, K)
 
-    print('---------------------------------Train accuracy --------------------------------------------')
+    attribut_train, attribut_test, result_train, result_test = commun.split_data(data, result, 0.2)
 
-    probability, net_parameters = optmize_parameters(attribut_train,result_train)
-    cm.accuracy(attribut_train, result_train, probability )
+    predicted, net_parameters = optmize_parameters(attribut_train,result_train)
+    commun.accuracy(attribut_train, result_train, predicted)
 
     net_output = neural_net(attribut_test, net_parameters)
-    loss, probability_test = loss_function(net_output[2], result_test, net_parameters)
-    print('---------------------------------Test accuracy --------------------------------------------')
-    print('Loss_test is {0}'.format(loss))
-    cm.accuracy(attribut_test, result_test, probability_test)
-
-
+    loss, probability_test = loss_function(net_output[2], result_test)
+    print(loss)
+    predicted_test = np.argmax(probability_test, axis=1)
+    commun.accuracy(attribut_test, result_test, predicted_test)

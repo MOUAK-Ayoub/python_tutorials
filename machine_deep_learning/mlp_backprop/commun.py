@@ -30,16 +30,14 @@ def relu_derivative(output):
     output_derivative[output > 0] = 1
     return output_derivative
 
-def accuracy(data, result, probability):
-    predicted = np.argmax(probability, axis=1)
+def accuracy(data, result, predicted):
     correct_prediction = np.size(result[(predicted == result)])
-    print('Number of correct prediction {0}'.format(correct_prediction))
-    print('correct prediction {0} %'.format((correct_prediction / float(np.size(result))) * 100))
-    plot_predicted_classification(data,predicted, result)
-    print('-----------------------------------------------------------------------------------------')
+    print(correct_prediction)
+    print(correct_prediction / float(np.size(result)) * 100)
+    plot_predicted_classification(data, predicted)
 
-def plot_predicted_classification(data, predicted, result):
-    K = len(set(result))
+def plot_predicted_classification(data, predicted):
+    K = len(set(predicted))
     colors = plt.cm.Spectral(np.linspace(0, 1, K))
 
     for i, color in zip( range(K) , colors):
