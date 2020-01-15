@@ -1,5 +1,5 @@
 import numpy as np
-import machine_deep_learning.mlp_backprop.commun as commun
+import machine_learning.mlp_backprop.commun as commun
 import matplotlib.pyplot as plt
 
 N = 300

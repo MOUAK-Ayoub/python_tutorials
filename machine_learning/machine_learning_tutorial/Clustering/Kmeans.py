@@ -1,7 +1,7 @@
-import machine_deep_learning.machine_learning_tutorial.Clustering.commun as commun
+import machine_learning.machine_learning_tutorial.Clustering.commun as commun
 from sklearn.preprocessing import StandardScaler
 import numpy as np
-import machine_deep_learning.machine_learning_tutorial.Clustering.KmeansRandomData as KmeansRandomData
+import machine_learning.machine_learning_tutorial.Clustering.KmeansRandomData as KmeansRandomData
 import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
 

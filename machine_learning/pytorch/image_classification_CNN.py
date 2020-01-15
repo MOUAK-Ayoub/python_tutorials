@@ -50,7 +50,7 @@ filter = filter.view(1,1,3,3).repeat(1,3,1,1)
 
 for batchid, (images, target) in enumerate(dataloader):
 
-    if batchid>4:
+    if batchid > 4:
         break
 
     image_conv = func.conv2d(images,filter, padding=1)

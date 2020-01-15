@@ -1,6 +1,6 @@
 import torch
 import torch.nn as nn
-from  machine_deep_learning.pytorch.dataset import TrainModel
+from .dataset import TrainModel
 
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
