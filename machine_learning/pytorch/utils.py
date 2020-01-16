@@ -12,6 +12,7 @@ transform_linear = transforms.Compose([
     transforms.Lambda(lambda x: x.to(device))
 ])
 transform_cnn = transforms.Compose([
+    transforms.Grayscale(),
     transforms.ToTensor(),
     transforms.Lambda(lambda x: x.to(device))
 ])

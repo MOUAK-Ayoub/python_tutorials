@@ -16,11 +16,16 @@ class TrainModel:
                  loss_criterion=nn.CrossEntropyLoss(),
                  train=True):
 
-        self.model = model
-        self.optimizer = torch.optim.SGD(model.parameters(), lr=1e-2) if optimizer == None else optimizer
+        self.model = model.to(device)
+        if optimizer == None:
+            self.optimizer = torch.optim.SGD(model.parameters(), lr=1e-2)
+        else:
+            self.optimizer = optimizer
+            self.optimizer.params = model.parameters()
+
         self.loss_criterion = loss_criterion
         self.dataloader= self.init_dataset(train)
-        self.model = self.model.to(device)
+
 
 
     def init_dataset(self, train):
@@ -30,8 +35,8 @@ class TrainModel:
 
         dataset = torchvision.datasets.CIFAR10(root='./data', train=train, transform=transform, download=True,
                                                 target_transform=transform_target)
-        dataloader = torch.utils.data.DataLoader(dataset, batch_size=50)
-        return dataloader,len(dataset)
+        dataloader = torch.utils.data.DataLoader(dataset, batch_size=50, shuffle=True)
+        return dataloader, len(dataset)
 
     def train_model(self, num_epoch):
         loss_epochs = []
@@ -49,7 +54,7 @@ class TrainModel:
 
     def train_epoch(self):
         dataloader, size = self.dataloader
-        optimizer = torch.optim.Adam(self.model.parameters())
+        optimizer = self.optimizer
         criterion = self.loss_criterion
         loss_array = []
         accuracy = 0
@@ -64,17 +69,18 @@ class TrainModel:
 
         print('accuracy {}%'.format(accuracy/float(size)*100))
 
-        return np.min(loss_array)
+        return np.mean(loss_array)
 
     def test_dataset(self):
         accuracy = 0
         loss_array = []
         testloader, size = self.init_dataset(False)
         for batchid, (image, target) in enumerate(testloader):
+
             output = self.model(image)
             loss = self.loss_criterion(output, target)
             loss_array.append(loss)
-            accuracy += torch.sum(torch.argmax(output,1) == target)
+            accuracy += torch.sum(torch.argmax(output, 1) == target)
 
         plt.plot(range(len(loss_array)), loss_array)
         plt.show()
