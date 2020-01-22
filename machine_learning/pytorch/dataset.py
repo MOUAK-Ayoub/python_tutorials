@@ -22,11 +22,8 @@ class TrainModel:
         else:
             self.optimizer = optimizer
             self.optimizer.params = model.parameters()
-
         self.loss_criterion = loss_criterion
-        self.dataloader= self.init_dataset(train)
-
-
+        self.dataloader = self.init_dataset(train)
 
     def init_dataset(self, train):
 
@@ -44,13 +41,15 @@ class TrainModel:
         for i in range(num_epoch):
             curr = time.time()
             loss = self.train_epoch()
-            loss_epochs.append(loss)
-            print("loss for epoch {0} is {1}".format(i, loss))
-            end = time.time()
-            print("the {0} epoch took {1}".format(i, str(datetime.timedelta(seconds=end - curr))))
+            loss_epochs.append(loss.item())
+            if num_epoch % 10 == 0:
+                print("loss for epoch {0} is {1}".format(i, loss))
+                end = time.time()
+                print("the {0} epoch took {1}".format(i, str(datetime.timedelta(seconds=end - curr))))
 
         plt.plot(range(num_epoch), loss_epochs)
         plt.show()
+        utils.is_loss_decreasing(loss_epochs)
 
     def train_epoch(self):
         dataloader, size = self.dataloader
@@ -64,27 +63,27 @@ class TrainModel:
             loss = criterion(output, target)
             loss.backward()
             self.optimizer.step()
-            loss_array.append(loss)
-            accuracy += torch.sum(torch.argmax(output,1) == target)
+            loss_array.append(loss.item())
+            accuracy += torch.sum(torch.argmax(output, 1) == target)
 
-        print('accuracy {}%'.format(accuracy/float(size)*100))
-
+        # accuracy per epoch
+        # print('accuracy {}%'.format(accuracy/float(size)*100))
         return np.mean(loss_array)
 
     def test_dataset(self):
-        accuracy = 0
-        loss_array = []
-        testloader, size = self.init_dataset(False)
-        for batchid, (image, target) in enumerate(testloader):
+        with torch.no_grad():
+            accuracy = 0
+            loss_array = []
+            testloader, size = self.init_dataset(False)
+            for batchid, (image, target) in enumerate(testloader):
+                output = self.model(image)
+                loss = self.loss_criterion(output, target)
+                loss_array.append(loss.item())
+                accuracy += torch.sum(torch.argmax(output, 1) == target)
 
-            output = self.model(image)
-            loss = self.loss_criterion(output, target)
-            loss_array.append(loss)
-            accuracy += torch.sum(torch.argmax(output, 1) == target)
-
-        plt.plot(range(len(loss_array)), loss_array)
-        plt.show()
+        print('Test mean loss : {}'.format(np.mean(loss_array)))
         print('Test accuracy: {}%'.format(accuracy/float(size)*100))
+        return accuracy/float(size)*100, np.mean(loss_array)
 
 
 

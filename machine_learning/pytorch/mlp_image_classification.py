@@ -1,11 +1,12 @@
-import torch
-import torch.nn as nn
-from machine_learning.pytorch.dataset import TrainModel
+import machine_learning.pytorch.utils as utils
+
+
+models = utils.models_by_optim()
+models = utils.models_by_activation()
+models = utils.models_by_lr()
+models = utils.models_by_depth(5)
+models = utils.models_by_hlayerlength()
 
 
 
-model_adam = nn.Sequential(nn.Linear(32 * 32, 32), nn.ReLU(), nn.Linear(32, 10))
-adam_optim = torch.optim.Adagrad(model_adam.parameters())
-model_training = TrainModel(model_adam, adam_optim)
-model_training.train_model(10)
-model_training.test_dataset()
+
