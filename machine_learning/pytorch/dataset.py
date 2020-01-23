@@ -22,11 +22,8 @@ class TrainModel:
         else:
             self.optimizer = optimizer
             self.optimizer.params = model.parameters()
-
         self.loss_criterion = loss_criterion
-        self.dataloader= self.init_dataset(train)
-
-
+        self.dataloader = self.init_dataset(train)
 
     def init_dataset(self, train):
 
