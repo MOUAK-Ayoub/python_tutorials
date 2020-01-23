@@ -16,10 +16,11 @@ class cnn(nn.Module):
     def __init__(self):
         super(cnn, self).__init__()
         self.conv1 = nn.Conv2d(1, 1, 3, padding=1)
-        self.mlp = nn.Sequential(nn.Linear(32 * 32, 32), nn.ReLU(), nn.Linear(32, 10))
+        self.mlp = nn.Sequential(nn.Linear(16 * 16, 32), nn.ReLU(), nn.Linear(32, 10))
 
     def forward(self, x):
         x = self.conv1(x)
+        x = F.max_pool2d(x, 2, 2)
         x = torch.flatten(x, 1)
         out = self.mlp(x)
         return out

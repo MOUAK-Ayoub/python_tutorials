@@ -1,0 +1,18 @@
+Plot accuracy as function of the number of kernels used for convolution
+Impact of regularisation on accuracy
+Use of batch noramalization and dropout
+KNN for CIFAR10 dataset classification
+Use wavelets for cnn and fourier transform
+Using spring or framework like spring for aop and DI, for autowiring different datasets
+optimize the relations between the files
+Logging and plotting practices in python
+add a dictionary for dataset init  which take batch size and other parameters
+Adding dataset validation during training
+Determine what is learning show weight as images, and the output of covolution and the type of filters learned for cnn , say
+Evolving the function plot_accuracy_by_criteria to determine dynamically the message
+Reading design patterns
+
+
+
+
+
