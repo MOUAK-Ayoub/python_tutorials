@@ -5,7 +5,7 @@ import matplotlib.pyplot as plt
 from PIL import Image
 import numpy as np
 import torch.nn.functional as F
-from  machine_learning.pytorch.dataset import TrainModel
+from  machine_learning.pytorch.nn_classifier import TrainModel
 
 
 # device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')

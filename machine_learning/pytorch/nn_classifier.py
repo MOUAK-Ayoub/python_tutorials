@@ -70,7 +70,8 @@ class TrainModel:
         # print('accuracy {}%'.format(accuracy/float(size)*100))
         return np.mean(loss_array)
 
-    def test_dataset(self):
+    def test_model(self):
+        self.model.eval()
         with torch.no_grad():
             accuracy = 0
             loss_array = []
