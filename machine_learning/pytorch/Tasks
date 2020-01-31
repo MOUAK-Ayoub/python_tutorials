@@ -1,19 +1,27 @@
-Choose a challenge from ens platform to begin with
-Plot accuracy as function of the number of kernels used for convolution
 Impact of regularisation on accuracy
-Use of batch noramalization and dropout
-KNN for CIFAR10 dataset classification
-Use wavelets for cnn and fourier transform
-Using spring or framework like spring for aop and DI, for autowiring different datasets
-optimize the relations between the files
-Logging and plotting practices in python
-add a dictionary for dataset init  which take batch size and other parameters
 Adding dataset validation during training
-Determine what is learning show weight as images, and the output of covolution and the type of filters learned for cnn , say
+
+Plot accuracy as function of the number of kernels used for convolution
+Determine what is learning show weight as images, and the output of convolution and the type of filters learned for cnn , say
+
+Using tensorboard for graphs
+
 Evolving the function plot_accuracy_by_criteria to determine dynamically the message
-Reading design patterns
-Implementing Multiprocessing for cpu and gpu in pytorch
+KNN for CIFAR10 dataset classification
+
 Reverify that all operations executes on cuda when it exists
+
+Implementing Multiprocessing for cpu and gpu in pytorch
+****************************************************************************************************************************************************
+Logging and plotting practices in python
+Using spring or framework like spring for aop and DI, for autowiring different datasets
+Reading design patterns
+****************************************************************************************************************************************************
+
+How can we incorporate fourier transform and wavelets as mlps
+Use wavelets for cnn and fourier transform
+Choose a challenge from ens platform to begin with
+
 
 
 

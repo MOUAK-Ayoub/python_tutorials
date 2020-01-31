@@ -42,7 +42,7 @@ class TrainModel:
             curr = time.time()
             loss = self.train_epoch()
             loss_epochs.append(loss.item())
-            if num_epoch % 10 == 0:
+            if i % 10 == 0:
                 print("loss for epoch {0} is {1}".format(i, loss))
                 end = time.time()
                 print("the {0} epoch took {1}".format(i, str(datetime.timedelta(seconds=end - curr))))
@@ -74,6 +74,8 @@ class TrainModel:
         self.model.eval()
         with torch.no_grad():
             accuracy = 0
+            label_accuracy = [0 for i in range(10)]  # to change for any dataset
+            target_label = [0 for i in range(10)]  # to change for any dataset
             loss_array = []
             testloader, size = self.init_dataset(False)
             for batchid, (image, target) in enumerate(testloader):
@@ -81,11 +83,12 @@ class TrainModel:
                 loss = self.loss_criterion(output, target)
                 loss_array.append(loss.item())
                 accuracy += torch.sum(torch.argmax(output, 1) == target)
+                for i in range(10):
+                    target_i = (target.detach().numpy() == i)
+                    label_accuracy[i] += np.sum((torch.argmax(output, 1) == i).detach().numpy()[target_i])
+                    target_label[i] += np.sum(target_i)
 
-        print('Test mean loss : {}'.format(np.mean(loss_array)))
-        print('Test accuracy: {}%'.format(accuracy/float(size)*100))
+        [print('label accuracy: {:.2f}%'.format(label_accuracy[i]/float(target_label[i])*100)) for i in range(10)]
+        print('Test mean loss : {:.2f}'.format(np.mean(loss_array)))
+        print('Test accuracy: {:.2f}%'.format(accuracy/float(size)*100))
         return accuracy/float(size)*100, np.mean(loss_array)
-
-
-
-

@@ -5,7 +5,7 @@ import matplotlib.pyplot as plt
 from matplotlib.ticker import MaxNLocator
 import numpy as np
 from . import nn_classifier
-from . import models
+from . import mlp_models as models
 
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 data_input = 32*32
@@ -26,19 +26,29 @@ transform_linear = transforms.Compose([
     transforms.Lambda(lambda x: torch.squeeze(x)),
     transforms.Lambda(lambda x: x.to(device))
 ])
-transform_cnn = transforms.Compose([
+transform_cnn_gray = transforms.Compose([
     transforms.Grayscale(),
+    transforms.ToTensor(),
+    transforms.Lambda(lambda x: x.to(device))
+])
+transform_cnn_rgb = transforms.Compose([
     transforms.ToTensor(),
     transforms.Lambda(lambda x: x.to(device))
 ])
 
 
 def get_tranform(model):
-    transform = transform_cnn
+    transform = transform_cnn_gray
+
     for id, child in enumerate(model.children()):
 
         if id > 1:
             break
+        if isinstance(child, nn.Conv2d):
+            if child.in_channels == 3:
+              transform = transform_cnn_rgb
+            break
+
         if isinstance(child, nn.Linear):
             transform = transform_linear
             break
