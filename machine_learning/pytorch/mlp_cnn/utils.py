@@ -4,8 +4,8 @@ import torch
 import matplotlib.pyplot as plt
 from matplotlib.ticker import MaxNLocator
 import numpy as np
-from . import nn_classifier
-from . import mlp_models as models
+from machine_learning.pytorch import nn_classifier
+from machine_learning.pytorch import mlp_models as models
 
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 data_input = 32*32

@@ -1,7 +1,7 @@
 import torch, torchvision
 import torch.nn as nn
 import torchvision.transforms as transforms
-from . import utils
+from machine_learning.pytorch import utils
 import matplotlib.pyplot as plt
 import time, datetime
 import numpy as np
