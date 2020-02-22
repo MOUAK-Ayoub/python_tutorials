@@ -11,13 +11,8 @@ device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 data_input = 32*32
 data_output = 10
 hidden_layer = [124]
-model_default = nn.Sequential(nn.Linear(32 * 32, 256), nn.ReLU(), nn.Linear(256, 10))
-optimizers = [torch.optim.SGD(model_default.parameters(), lr=1e-2),
-              torch.optim.SGD(model_default.parameters(), lr=1e-2, momentum=0.9),
-              torch.optim.SGD(model_default.parameters(), lr=1e-2, momentum=0.5),
-              torch.optim.SGD(model_default.parameters(), lr=1e-2, momentum=0.9, nesterov=True),
-              torch.optim.Adam(model_default.parameters()),
-              torch.optim.RMSprop(model_default.parameters())]
+model_default = models.MLP(data_input, data_output, hidden_layer)
+
 activations = [nn.ReLU(), nn.LeakyReLU(), nn.Tanh(), nn.Sigmoid(), nn.Threshold(1, 1e-4)]
 transform_linear = transforms.Compose([
     transforms.Grayscale(),
@@ -65,73 +60,75 @@ def models_by_dropouts(min=0, max=0.9, length=2):
     dropouts = np.linspace(min, max, length)
     model_array = []
     for dropout in dropouts:
-        model_sample = models.MLP(data_input, data_output, hidden_layer, p=dropout), optimizers[0]
-        model_array.append(model_sample)
+        model_sample = models.MLP(data_input, data_output, hidden_layer, p=dropout)
+        model_array.append((model_sample, None))
     return model_array
 
 
 def models_by_lr(start=1e-3, stop=1, length=10):
-    model = models.MLP(data_input, data_output, hidden_layer)
+    model_mlp = models.MLP(data_input, data_output, hidden_layer)
     model_array = []
     lrs = np.linspace(start, stop, length)
     for lr in lrs:
-        optimizer = torch.optim.SGD(model.parameters(), lr=lr)
-        model_sample = model, optimizer
+        optimizer = torch.optim.SGD(model_mlp.parameters(), lr=lr)
+        model_sample = model_mlp, optimizer
         model_array.append(model_sample)
     return model_array
 
 
 def models_by_hlayerlength(start=1, stop=8):
-    models = []
+    model_array = []
     length_hlayer_array = 2 ** np.arange(start, stop)
     for n in length_hlayer_array:
         model = nn.Sequential(nn.Linear(32 * 32, n), nn.ReLU(), nn.Linear(n, 10))
-        models.append((model, None))
-    return models
+        model_array.append((model, None))
+    return model_array
 
 
-def models_by_activation(depth=1):
-    models = []
+def models_by_activation():
+    model_array = []
     for activation in activations:
-        model = model_depth(depth, activation)
-        models.append((model, None))
-    return models
+        model = models.MLP(data_input, data_output, hidden_layer, activ=activation)
+        model_array.append((model, None))
+    return model_array
 
 
 def models_by_depth(number):
-    models = []
-    for i in range(number):
+    assert(number > 1)
+    model_array = []
+    for i in range(1, number):
         model = model_depth(i)
-        (models.append((model, optimizers[0])) if model is not None else None)
-    return models
+        model_array.append((model, None))
+    return model_array
 
 
-def model_depth(n, activ=nn.ReLU()):
+def model_depth(n):
     if n >= np.log2(data_input) or n <= 0:
-        print('Hidden layers must be in the interval ]0,{0}['.format(np.log2(32 * 32)))
+        print('Hidden layers must be in the interval ]0,{0}['.format(np.log2(data_input)))
         return
+    hidden_layers = np.array(data_input / (2 ** np.arange(1, n+1)), dtype=int)
+    model = models.MLP(data_input, data_output, hidden_layers)
 
-    hidden_length = np.array(data_input / (2 ** np.arange(0, n+1)), dtype=int)
-    layers = []
-    for i in range(n):
-        layers.append(nn.Linear(hidden_length[i], hidden_length[i+1]))
-        layers.append(activ)
-    layers.append(nn.Linear(hidden_length[n], data_output))
-    model = nn.Sequential(*layers)
     return model
 
 
 def models_by_optim():
-    models = []
+    optimizers = [torch.optim.SGD(model_default.parameters(), lr=1e-2),
+                  torch.optim.SGD(model_default.parameters(), lr=1e-2, momentum=0.9),
+                  torch.optim.SGD(model_default.parameters(), lr=1e-2, momentum=0.5),
+                  torch.optim.SGD(model_default.parameters(), lr=1e-2, momentum=0.9, nesterov=True),
+                  torch.optim.Adam(model_default.parameters()),
+                  torch.optim.RMSprop(model_default.parameters())]
+    models_array = []
     for optimizer in optimizers:
-        models.append((model_default, optimizer))
-    return models
+        models_array.append((model_default, optimizer))
+    return models_array
 
 
-def plot_accuracy_by_criteria(models, epochs=10):
+def plot_accuracy_by_criteria(model_array, epochs=10):
     accuracy = []
     loss = []
-    for model_id, (model, optimizer) in enumerate(models):
+    for model_id, (model, optimizer) in enumerate(model_array):
         model_training = nn_classifier.TrainModel(model, optimizer)
         model_training.train_model(epochs)
         accuracy_test, loss_test = model_training.test_model()

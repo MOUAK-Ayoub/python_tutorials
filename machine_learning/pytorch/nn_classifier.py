@@ -42,7 +42,7 @@ class TrainModel:
             curr = time.time()
             loss = self.train_epoch()
             loss_epochs.append(loss.item())
-            if num_epoch % 10 == 0:
+            if i % 10 == 0:
                 print("loss for epoch {0} is {1}".format(i, loss))
                 end = time.time()
                 print("the {0} epoch took {1}".format(i, str(datetime.timedelta(seconds=end - curr))))
