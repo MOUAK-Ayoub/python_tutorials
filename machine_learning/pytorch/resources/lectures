@@ -1,0 +1,17 @@
+Using one mlp taking as input all  the variables  for detecting a pattern will not lead to detect the object if the location changed.
+So the need of sliding a window that have the same size as the pattern we are searching for
+We use the same weights for all the windows sliding over the image (or any input in general). The weight can be viewed as correlation filter
+and represent the feature we are searching for(say a flower).
+The convolution, so the filter used, are not interpreted as edge detectors, but a sub(sub)pattern to be matched with.
+Distribution of the scanning lead to less parameters in the model.
+Max pooling (dawnsampling) is used in these type of MLPs and is viewed as another filter, which have size in the order of 2 with striding.
+
+
+
+
+----------------------------------------------------------------------------------------------------
+rethinking  cnn
+calculate the recpetive field at the subsequent layers using stride, and with maxpool
+testing cnn with more deep layers
+Testing cnn with stride as he did
+---------------------------------------------------------------------------------------------------
