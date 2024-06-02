@@ -5,7 +5,7 @@ import matplotlib.pyplot as plt
 import torch
 import torch.nn as nn
 
-from machine_learning.pytorch.mlp_cnn import nn_classifier
+from machine_learning.pytorch import nn_classifier
 
 
 class CNN3Filter(nn.Module):
