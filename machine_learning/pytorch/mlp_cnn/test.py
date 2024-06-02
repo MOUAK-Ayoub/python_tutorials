@@ -1,12 +1,11 @@
-import machine_learning.pytorch.utils as utils
-import machine_learning.pytorch.nn_classifier as nn_classifier
+
 import torchvision.utils
 import numpy as np
 import matplotlib.pyplot as plt
-from machine_learning.pytorch import cnn_models
 import torch
 import torch.nn as nn
-import torch.nn.functional as F
+
+from machine_learning.pytorch.mlp_cnn import nn_classifier
 
 
 class CNN3Filter(nn.Module):

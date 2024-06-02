@@ -1,4 +1,4 @@
-from sklearn.metrics import jaccard_similarity_score
+from sklearn.metrics import jaccard_score
 from sklearn.metrics import f1_score
 from sklearn.metrics import log_loss
 import matplotlib.pyplot as plt
@@ -6,7 +6,7 @@ import numpy as np
 import itertools
 
 def jaccardScore(y_test, yhat):
-    jaccard_similarity_score(y_test, yhat)
+    jaccard_score(y_test, yhat)
 
 def f1Score(y_test, yhat):
     f1_score(y_test, yhat, average='weighted')

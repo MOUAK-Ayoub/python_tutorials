@@ -14,7 +14,7 @@ def logisticRegressionPrediction(X_train, y_train, X_test):
     return yhat, yhat_prob
 
 if __name__ == '__main__':
-    print sys.path
+    print(sys.path)
     data, churn, features = commun.readCsv('ChurnData.csv')
     churn = churn.astype('int')
     data = preprocessing.StandardScaler().fit(data).transform(data)
@@ -25,4 +25,4 @@ if __name__ == '__main__':
 
     plt.figure()
     accuracy.plot_confusion_matrix(cnf_matrix, classes=['churn=1', 'churn=0'])
-    print accuracy.logloss(y_testset, yhat_prob)
+    print(accuracy.logloss(y_testset, yhat_prob))

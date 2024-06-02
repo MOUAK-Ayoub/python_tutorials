@@ -19,7 +19,7 @@ def predictSVM(X_train, X_test, y_train):
 
 if __name__ == '__main__':
     cell_data = commun.readCsvReturnDF('cell_samples.csv')
-    #plotCellClasses(cell_data)
+    plotCellClasses(cell_data)
     cell_data = cell_data[pd.to_numeric(cell_data['BareNuc'], errors='coerce').notnull()]
     X = cell_data[cell_data.columns[0:cell_data.columns.size - 1]]
     y = cell_data[cell_data.columns[cell_data.columns.size - 1]].astype('int')
@@ -31,6 +31,6 @@ if __name__ == '__main__':
     np.set_printoptions(precision=2)
     print (classification_report(y_test, yhat))
     plt.figure()
-    #accuracy.plot_confusion_matrix(cnf_matrix, classes=['Benign(2)', 'Malignant(4)'], normalize=False, title='Confusion matrix')
-    print accuracy.f1Score(y_test, yhat)
-    print accuracy.jaccardScore(y_test, yhat)
+    accuracy.plot_confusion_matrix(cnf_matrix, classes=['Benign(2)', 'Malignant(4)'], normalize=False, title='Confusion matrix')
+    print(accuracy.f1Score(y_test, yhat))
+    #print(accuracy.jaccardScore(y_test, yhat))

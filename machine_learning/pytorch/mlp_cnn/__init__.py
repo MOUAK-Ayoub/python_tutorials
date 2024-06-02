@@ -73,42 +73,4 @@ def make_weights_for_balanced_classes(images, nclasses):
     return weight
 
 
-orig_set = ImageFolderWithPaths("./data/upwork/", transform=train_trans)
-n = len(orig_set)  # total number of examples
-n_val = int(0.01 * n)  # take ~15% for val
-n_test = int(0.01 * n)  # take ~15% for test
-test_ds = torch.utils.data.Subset(orig_set, range(n_test))
-val_ds = torch.utils.data.Subset(orig_set, range(n_test, n_val + n_test))
-train_ds = torch.utils.data.Subset(orig_set, range(n_val + n_test,3*(n_val + n_test) ))
 
-weights = make_weights_for_balanced_classes(orig_set.imgs, len(orig_set.classes))
-weights = torch.DoubleTensor(weights)
-sampler = torch.utils.data.sampler.WeightedRandomSampler(weights, len(weights))
-print(f'Total Train Images: {len(train_ds)}')
-print(f'Total Val Images: {len(val_ds)}')
-print(f'Total Test Images: {len(test_ds)}')
-batch_size = batch_size
-num_workers = num_workers
-train_dl = DataLoader(
-    train_ds,
-    batch_size=batch_size,
-    shuffle=False,
-    sampler=sampler,
-)
-
-val_dl = DataLoader(
-    val_ds,
-    batch_size=batch_size,
-    shuffle=False,
-    num_workers=num_workers,
-)
-test_dl = DataLoader(
-    test_ds,
-    batch_size=batch_size,
-    shuffle=False,
-    num_workers=num_workers,
-)
-total_train_batches = (len(train_ds)) // batch_size
-total_val_batches = (len(val_ds)) // batch_size
-print(f'Total Train Batches: {round(total_train_batches)}')
-print(f'Total Val Batches: {round(total_val_batches)}')
